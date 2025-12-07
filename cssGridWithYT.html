@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CSS Grid — Hero YouTube</title>
+  <style>
+/* :root selector will override conflicting styles defined with html if they appear in the same stylesheet */
+    :root{
+      --gap:16px;
+      --bg:#f5f6f8;
+      --accent:#0d6efd;
+    }
+
+    *{
+      box-sizing: border-box;
+    }
+
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+
+    /* page grid */
+    .page{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: min-content;
+      gap:var(--gap);
+      padding:var(--gap);
+      background:var(--bg);
+      box-sizing:border-box;
+      align-items:start;
+    }
+
+    /* The "first cell is the entire viewport" — we make the hero span all columns and fill the viewport height */
+    .hero{
+      grid-column: 1 / -1;
+      height:100vh; /* fill the viewport */
+      position:relative;
+      border-radius:12px;
+      overflow:hidden;
+      background:#000;
+      box-shadow:0 6px 20px rgba(0,0,0,0.12);
+    }
+
+    /* Make the YouTube iframe / player fill the hero area */
+    .hero #player,
+    .hero iframe{
+      position:absolute;
+      inset:0; /* top/right/bottom/left = 0 */
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    /* Example grid content below the hero */
+    .card{
+      background:white;
+      padding:16px;
+      border-radius:10px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    /* responsive: on narrow screens reduce to 1 column */
+    @media (max-width:800px){
+      .page{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    Single-file example page.
+    - The first cell (.hero) spans the full grid width and has height:100vh so it fills the viewport.
+    - The YouTube IFrame Player API is loaded and used to create a controllable player inside #player.
+    - Change `VIDEO_ID` in the script below to show a different video.
+  -->
+
+  <main class="page">
+
+    <!-- HERO: first grid cell = entire viewport with YouTube player -->
+    <section class="hero" aria-label="Hero video">
+      <!-- The API will replace this div with the iframe player -->
+      <div id="player"></div>
+    </section>
+
+    <!-- Other grid cells (example content) -->
+    <section class="card"> <h3>Card A</h3> <p>Example content in the CSS grid below the hero.</p> </section>
+    <section class="card"> <h3>Card B</h3> <p>More example content.</p> </section>
+    <section class="card"> <h3>Card C</h3> <p>And another one.</p> </section>
+    <section class="card"> <h3>Card D</h3> <p>Grid is flexible — add as many cells as you like.</p> </section>
+    <section class="card"> <h3>Card E</h3> <p>Responsive: collapses to 1 column on small screens.</p> </section>
+
+  </main>
+
+  <!-- Load YouTube IFrame API
+   https://developers.google.com/youtube/iframe_api_reference -->
+  <script>
+    // Change this VIDEO_ID to the YouTube video you want to show
+    const VIDEO_ID = '-fP5iBPGMp8';
+
+    // 1) Inject the YouTube IFrame API script
+    (function loadYouTubeAPI(){
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      tag.async = true;
+      document.head.appendChild(tag);
+    })();
+
+    // 2) This function will be called by the YouTube API when it is ready
+    // (global name required by the API)
+    function onYouTubeIframeAPIReady(){
+      // create the player inside the `player` div
+      window.ytPlayer = new YT.Player('player', {
+        videoId: VIDEO_ID,
+        playerVars: {
+          autoplay: 0,
+          controls: 1,
+          rel: 0,
+          playsinline: 1
+        },
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(evt){
+      // make sure the iframe expands to fill the hero container
+      const iframe = evt.target.getIframe();
+      iframe.setAttribute('title','Hero video');
+
+      // OPTIONAL: uncomment to autoplay when allowed by browser
+      // evt.target.playVideo();
+    }
+
+    function onPlayerStateChange(e){
+      // example: you can react to play/pause/ended here
+      // console.log('YT state', e.data);
+    }
+
+    // Fallback: if the API fails to load for some reason, inject a plain iframe
+    setTimeout(()=>{
+      if(!window.YT){
+        const container = document.getElementById('player');
+        if(container && !container.querySelector('iframe')){
+          container.innerHTML = `<iframe src="https://www.youtube.com/embed/${VIDEO_ID}?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Hero video"></iframe>`;
+        }
+      }
+    },2500);
+  </script>
+</body>
+</html>

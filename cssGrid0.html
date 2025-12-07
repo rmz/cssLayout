@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <title>Divs to Style</title>
+	  <style>
+		* {
+		    box-sizing: border-box;
+		}
+    div { border: 1px solid red; text-align: center;}
+
+    /* a selector is needed to declare the grid and wrap the content in the grid */
+    #layout {
+      display: grid;
+      /* add as many values as you want rows */
+      grid-template-rows: 100px 100px 100px;
+      /* add as many values as you want columns */
+      grid-template-columns: 200px 500px 200px;
+    }
+
+    /* manipulate the width or height of a grid cell */
+    #item1 {
+    	grid-column: 1/3;
+    	grid-row: 1/4;
+    	background-color: red;
+    }
+
+</style>
+  </head>
+
+  <body>
+
+      <div id="layout">
+        <div id="one">One</div>
+        <div id="two">Two</div>
+        <div id="three">Three</div>
+        <div id="four">Four</div>
+        <div id="five">Five</div>
+        <div id="six">Six</div>
+        <div id="seven">Seven</div>
+        <div id="eight">Eight</div>
+        <div id="nine">Nine</div>
+    </div><!-- close layout -->
+
+  </body>
+</html>
