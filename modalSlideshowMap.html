@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lightbox Slideshow</title>
+  <!-- Demos used:
+ https://www.w3schools.com/howto/howto_css_modals.asp
+ -->
+  <style>
+  #map {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      z-index: -10;
+    }
+  #map img {
+      width: 100%;
+      z-index: -10;
+    }
+  #location01{
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    width: 100px;
+    height: 100px;
+    z-index: 20;
+  }
+  #location02 {
+    cursor: pointer;
+    position: absolute;
+    left: 30%;
+    top: 170%;
+    width: 100px;
+    height: 100px;
+    z-index: 20;
+  }
+  .open-modal-btn {
+    z-index: 80;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+  }
+
+.modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/* https://www.w3schools.com/css/css3_mediaqueries.asp */
+@media screen and (min-width: 300px) and (max-width: 800px) {
+  #location01{
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    width: 60px;
+    height: 60px;
+    z-index: 20;
+  }
+  #location02 {
+    cursor: pointer;
+    position: absolute;
+    left: 30%;
+    top: 65%;
+    width: 60px;
+    height: 60px;
+    z-index: 20;
+  }
+}
+</style>
+</head>
+
+<body>
+  <div id="map">
+    <img src="img/ny1778.jpg" alt="A 1778 map of the island of New York" />
+  </div>
+  <!-- Trigger Buttons -->
+  <img id="location01" src="img/emoji.png" alt="love emoji" class="open-modal-btn" data-target="modal-1" />
+  <img id="location02" src="img/emoji.png" alt="love emoji" class="open-modal-btn" data-target="modal-2" />
+<button class="open-modal-btn" data-target="modal-3">Open Modal 3</button>
+
+<!-- Modals -->
+<div id="modal-1" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <iframe src="slideshow1.html" title="Free in NYC" style="width:960px; height:800px; border:none;"></iframe>
+    </iframe>
+  </div>
+</div>
+
+<div id="modal-2" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <iframe src="slideshow2.html" title="Free in NYC" style="width:960px; height:800px; border:none;"></iframe>
+    </iframe>
+  </div>
+</div>
+
+<div id="modal-3" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>Modal 3 Content</h2>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const openButtons = document.querySelectorAll(".open-modal-btn");
+  const closeButtons = document.querySelectorAll(".close-btn");
+  const modals = document.querySelectorAll(".modal");
+
+  // Open modal
+  openButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const modalId = btn.dataset.target;
+      const targetModal = document.getElementById(modalId);
+      if (targetModal) {
+        targetModal.classList.add("active");
+      }
+    });
+  });
+
+  // Close modal via close span
+  closeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const modal = btn.closest(".modal");
+      modal.classList.remove("active");
+    });
+  });
+
+  // Close modal when clicking outside content area
+  window.addEventListener("click", (e) => {
+    modals.categoryModal = e.target;
+    modals.forEach((modal) => {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+  });
+});
+
+</script>
+</body>
+</html>
